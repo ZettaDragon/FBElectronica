@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "552713050640",
+    "firebase_url": "https://fir-electronica-default-rtdb.firebaseio.com",
+    "project_id": "fir-electronica",
+    "storage_bucket": "fir-electronica.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:552713050640:android:97aadb017ed1e734cbc895",
+        "android_client_info": {
+          "package_name": "com.example.fbelectronica"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "552713050640-2k1m6ncs7d2e34khadv530li64ekmk2h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBc6MVgT7_mX5mKtmC_nHq-l53eSmE8DM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "552713050640-2k1m6ncs7d2e34khadv530li64ekmk2h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:552713050640:android:a327ca9806c867decbc895",
+        "android_client_info": {
+          "package_name": "com.example.firebaseelectronica"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "552713050640-2k1m6ncs7d2e34khadv530li64ekmk2h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBc6MVgT7_mX5mKtmC_nHq-l53eSmE8DM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "552713050640-2k1m6ncs7d2e34khadv530li64ekmk2h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
