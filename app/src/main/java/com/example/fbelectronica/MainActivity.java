@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private StorageReference storageReference;
     private Uri imgUri;
     Productos nP;
+    String sdownload_url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         nP.setMarca(txtMarca.getText().toString());
                         nP.setDescripcion(txtDescripcion.getText().toString());
                         nP.setPrecio(Double.parseDouble(txtPrecio.getText().toString()));
+                        nP.setFoto(sdownload_url);
 
                         /*UploadImage uploadImage = new UploadImage();
                         String i = uploadImage.cambiarUrl(id,nP);
@@ -136,11 +138,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     startActivityForResult(i,0);
                     break;
                 case R.id.btnSelectFoto:
-                    /*Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                    Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                     intent.setType("image/*");
-                    startActivityForResult(intent,GALLERY_INTENT);*/
-                    Intent in = new Intent(MainActivity.this, UploadImage.class);
-                    startActivityForResult(in,0);
+                    startActivityForResult(intent,GALLERY_INTENT);
+                    /*Intent in = new Intent(MainActivity.this, UploadImage.class);
+                    startActivityForResult(in,0);*/
                     break;
                 case R.id.btnBorrar:
                     borrarProducto(savedProductos.get_ID());
@@ -194,7 +196,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (intent != null){
             Bundle bundle  = intent.getExtras();
-            if (Activity.RESULT_OK == resultCode){
+            if (requestCode == GALLERY_INTENT && resultCode == RESULT_OK){
+                progressDialog.setTitle("Subiendo...");
+                progressDialog.setMessage("Subiendo Foto");
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+
+                Uri uri = intent.getData();
+
+                StorageReference filePath = storageReference.child("img").child(uri.getLastPathSegment());
+                filePath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        progressDialog.dismiss();
+                        Uri des = taskSnapshot.getUploadSessionUri();
+                        //Glide.with(MainActivity.this).load(des).into(imgFoto);
+                        Toast.makeText(MainActivity.this,"Subida",Toast.LENGTH_SHORT).show();
+                        //Log.i("URL", String.valueOf(des));
+                        //Uri downloadUri = taskSnapshot.getMetadata().getDownloadUrl();
+
+                        //here
+                        Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl();
+                        while (!urlTask.isSuccessful());
+                        Uri downloadUrl = urlTask.getResult();
+
+                        sdownload_url = String.valueOf(downloadUrl);
+                        Log.i("URL", sdownload_url);
+                    }
+                });
+            }
+            else if (Activity.RESULT_OK == resultCode){
                 Productos productos = (Productos) bundle.getSerializable("producto");
                 savedProductos = productos;
                 id = productos.get_ID();
@@ -202,7 +233,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 txtDescripcion.setText(productos.getDescripcion());
                 txtPrecio.setText(String.valueOf(productos.getPrecio()));
                 Glide.with(MainActivity.this).load(productos.getFoto()).into(imgFoto);
-
             }
         }
     }
