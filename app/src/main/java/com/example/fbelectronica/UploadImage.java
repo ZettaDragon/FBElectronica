@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.fbelectronica.objetos.Productos;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
@@ -25,18 +26,18 @@ import com.google.firebase.storage.UploadTask;
 import com.google.firebase.storage.StorageMetadata;
 
 import java.io.File;
+import java.util.Objects;
 
 public class UploadImage extends AppCompatActivity {
 
     private TextView lblText;
-    //DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-    //DatabaseReference rootChild = databaseReference.child("txt");
 
     private StorageReference storageReference;
     private static final int GALLERY_INTENT = 1;
     private Button btnAtras;
     private ImageView imgFoto;
     private ProgressDialog progressDialog;
+    String sdownload_url;
 
 
     @Override
@@ -96,8 +97,23 @@ public class UploadImage extends AppCompatActivity {
                     while (!urlTask.isSuccessful());
                     Uri downloadUrl = urlTask.getResult();
 
-                    final String sdownload_url = String.valueOf(downloadUrl);
+                    sdownload_url = String.valueOf(downloadUrl);
                     Log.i("URL", sdownload_url);
+
+                    /*Productos productos; *//*= new Productos();*//*
+                    MainActivity mainActivity = new MainActivity();
+                    productos = mainActivity.nP;
+                    productos.get_ID();
+                    Log.i("id", productos.get_ID());*/
+                    /*productos.setFoto(String.valueOf(downloadUrl));
+                    String getURL = productos.getFoto();
+                    Log.i("NU", getURL);*/
+
+                   /* MainActivity mainActivity = new MainActivity();
+                    mainActivity.savedProductos.setFoto(sdownload_url);
+                    String getURL =  mainActivity.savedProductos.getFoto();
+                    Log.i("NU", getURL);
+*/
                 }
             });
         }

@@ -11,6 +11,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,6 +23,7 @@ import com.bumptech.glide.Glide;
 import com.example.fbelectronica.objetos.Productos;
 import com.example.fbelectronica.objetos.ReferenciasFirebase;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -40,12 +42,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ImageView imgFoto;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
-    private Productos savedProductos;
+    Productos savedProductos;
     private String id;
     private static final int GALLERY_INTENT = 1;
     private ProgressDialog progressDialog;
     private StorageReference storageReference;
     private Uri imgUri;
+    Productos nP;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             switch (v.getId()){
                 case R.id.btnGuardar:
                     boolean completo = true;
-                    if (txtMarca.getText().toString().equals("")){
+                    /*if (txtMarca.getText().toString().equals("")){
                         txtMarca.setError("Rellenarar Campo");
                         completo = false;
                     }
@@ -97,23 +100,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     if (txtPrecio.getText().toString().equals("")){
                         txtPrecio.setError("Rellenarar Campo");
                         completo = false;
-                    }
+                    }*/
 
                     if (completo){
-                        Productos nP = new Productos();
+                        nP = new Productos();
 
                         nP.setMarca(txtMarca.getText().toString());
                         nP.setDescripcion(txtDescripcion.getText().toString());
                         nP.setPrecio(Double.parseDouble(txtPrecio.getText().toString()));
-                        /*if (savedProductos == null){
-                            agregar(nP);
-                            Toast.makeText(getApplicationContext(),"Contacto guardado con exito", Toast.LENGTH_SHORT).show();
-                            limpiar();
-                        }else {
-                            actualizar(id,nP);
-                            Toast.makeText(getApplicationContext(),"Contacto actualizado con exito", Toast.LENGTH_SHORT).show();
-                            txtMarca.requestFocus();
-                        }*/
+
+                        /*UploadImage uploadImage = new UploadImage();
+                        String i = uploadImage.cambiarUrl(id,nP);
+
+                        System.out.println(nP.getFoto());*/
+                        //Log.e("i", i);
+
+
+                       // nP.setFoto(i);
+
+                        /*UploadImage uploadImage = new UploadImage();
+                        String ui = uploadImage.sdownload_url;*/
+                        /*nP.setFoto(ui);
+                        Log.i("SU",uploadImage.sdownload_url);*/
 
                         if (savedProductos != null){
                             actualizar(id,nP);
@@ -128,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     startActivityForResult(i,0);
                     break;
                 case R.id.btnSelectFoto:
-                    /*Intent intent = new Intent(Intent.ACTION_PICK);
+                    /*Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                     intent.setType("image/*");
                     startActivityForResult(intent,GALLERY_INTENT);*/
                     Intent in = new Intent(MainActivity.this, UploadImage.class);
@@ -148,51 +156,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void borrarProducto(String childIndex){
         databaseReference.child(String.valueOf(childIndex)).removeValue();
     }
-/*
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == GALLERY_INTENT && resultCode == RESULT_OK){
-            progressDialog.setTitle("Subiendo...");
-            progressDialog.setMessage("Subiendo Foto");
-            progressDialog.setCancelable(false);
-            progressDialog.show();
 
-            Uri uri = data.getData();
-
-            StorageReference filePath = storageReference.child("fotos").child(uri.getLastPathSegment());
-            filePath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    progressDialog.dismiss();
-                    Uri des = taskSnapshot.getUploadSessionUri();
-                    Glide.with(MainActivity.this).load(des).into(imgFoto);
-                    Toast.makeText(MainActivity.this,"Subida",Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-        if (data != null){
-            Bundle bundle  = data.getExtras();
-            if (Activity.RESULT_OK == resultCode){
-                Productos productos = (Productos) bundle.getSerializable("producto");
-                savedProductos = productos;
-                id = productos.get_ID();
-                txtMarca.setText(productos.getMarca());
-                txtDescripcion.setText(productos.getDescripcion());
-                txtPrecio.setText(String.valueOf(productos.getPrecio()));
-            }else{
-                limpiar();
-            }
-        }
-    }*/
-
-    public void agregar(Productos c) {
+    /*public void agregar(Productos c) {
         DatabaseReference newContactoReference = databaseReference.push();
         //obtener el id del registro y setearlo
         String id = newContactoReference.getKey();
         c.set_ID(id);
         newContactoReference.setValue(c);
-    }
+    }*/
 
     public void actualizar(String id, Productos p) {
         //actualizar un objeto al nodo referencia
@@ -212,6 +183,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         txtDescripcion.setText("");
         txtPrecio.setText("");
         txtMarca.requestFocus();
+        imgFoto.setImageResource(R.drawable.com);
         id = "";
     }
 
@@ -230,28 +202,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 txtDescripcion.setText(productos.getDescripcion());
                 txtPrecio.setText(String.valueOf(productos.getPrecio()));
                 Glide.with(MainActivity.this).load(productos.getFoto()).into(imgFoto);
+
             }
-        }else{
-            limpiar();
         }
     }
-
-        /*if (requestCode == GALLERY_INTENT && resultCode == RESULT_OK){
-            progressDialog.setTitle("Electronica");
-            progressDialog.setMessage("Subiendo Foto...");
-            progressDialog.setCancelable(false);
-            progressDialog.show();
-
-            Uri uri = intent.getData();
-            StorageReference filePath = storageReference.child("img").child(uri.getLastPathSegment());
-            filePath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    progressDialog.dismiss();
-                    Uri des = taskSnapshot.getUploadSessionUri();
-                    Glide.with(MainActivity.this).load(des).into(imgFoto);
-                    Toast.makeText(MainActivity.this,"Subida",Toast.LENGTH_SHORT).show();
-                }
-            });
-        }*/
 }

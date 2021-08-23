@@ -77,7 +77,7 @@
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Regresar"
+                    android:text="Listar"
                     android:id="@+id/btnRegresar"
                     android:layout_marginEnd="5dp"
                     android:layout_span="2"/>
