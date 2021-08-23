@@ -210,18 +210,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         progressDialog.dismiss();
                         Uri des = taskSnapshot.getUploadSessionUri();
-                        //Glide.with(MainActivity.this).load(des).into(imgFoto);
                         Toast.makeText(MainActivity.this,"Subida",Toast.LENGTH_SHORT).show();
-                        //Log.i("URL", String.valueOf(des));
-                        //Uri downloadUri = taskSnapshot.getMetadata().getDownloadUrl();
 
-                        //here
                         Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl();
                         while (!urlTask.isSuccessful());
                         Uri downloadUrl = urlTask.getResult();
 
                         sdownload_url = String.valueOf(downloadUrl);
                         Log.i("URL", sdownload_url);
+                        Glide.with(MainActivity.this).load(sdownload_url).into(imgFoto);
                     }
                 });
             }
@@ -232,6 +229,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 txtMarca.setText(productos.getMarca());
                 txtDescripcion.setText(productos.getDescripcion());
                 txtPrecio.setText(String.valueOf(productos.getPrecio()));
+                sdownload_url = productos.getFoto();
                 Glide.with(MainActivity.this).load(productos.getFoto()).into(imgFoto);
             }
         }
